@@ -1,0 +1,19 @@
+{
+    "name": "future",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "cross-env NODE_ENV=production node index.js",
+        "dev": "cross-env NODE_ENV=development nodemon index.js"
+    },
+    "author": "Hrithik Naha",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    },
+    "dependencies": {
+        "cross-env": "^7.0.3",
+        "express": "^4.18.2"
+    }
+}
