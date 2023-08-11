@@ -12,6 +12,11 @@ const bookSchema = new mongoose.Schema(
         pageCount: { type: Number, required: true },
         categories: [{ type: String, required: true }],
         language: { type: String, required: true },
+        startDate: { type: Date },
+        currentPage: { type: Number },
+        status: { type: String },
+        endDate: { type: Date },
+        rating: { type: Number },
     },
     { timeseries: true, timestamps: true }
 );

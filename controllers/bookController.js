@@ -94,6 +94,126 @@ const bookController = {
             next(error);
         }
     },
+
+    startReading: async (req, res, next) => {
+        try {
+            const { startDate } = req.body;
+
+            const user = await User.findOne({ username: req.user }).populate("books");
+
+            if (!user) return res.status(200).json({ success: true, status_message: "No User." });
+
+            const books = user.books;
+
+            const book = books.filter((book) => book.id === req.params.bookId)[0];
+
+            if (!book)
+                return res.status(200).json({
+                    success: false,
+                    status_message: "The resource you requested could not be found.",
+                });
+
+            const startBook = await Book.findOneAndUpdate(
+                { id: req.params.bookId },
+                { startDate, currentPage: 0, status: "Started Reading" }
+            );
+
+            return res.status(200).json({
+                success: true,
+                status_message: "The resource was updated.",
+                book: startBook,
+            });
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
+    },
+
+    endReading: async (req, res, next) => {
+        try {
+            const { endDate, rating } = req.body;
+
+            const user = await User.findOne({ username: req.user }).populate("books");
+
+            if (!user) return res.status(200).json({ success: true, status_message: "No User." });
+
+            const books = user.books;
+
+            const book = books.filter((book) => book.id === req.params.bookId)[0];
+
+            if (!book)
+                return res.status(200).json({
+                    success: false,
+                    status_message: "The resource you requested could not be found.",
+                });
+
+            if (book.status === "Completed")
+                return res.status(200).json({
+                    success: false,
+                    status_message: "The resource has been read already.",
+                });
+
+            const endBook = await Book.findOneAndUpdate(
+                { id: req.params.bookId },
+                {
+                    endDate,
+                    rating,
+                    currentPage: book.pageCount,
+                    status: "Completed",
+                }
+            );
+
+            return res.status(200).json({
+                success: true,
+                status_message: "The resource was updated.",
+                book: endBook,
+            });
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
+    },
+
+    stopReading: async (req, res, next) => {
+        try {
+            const user = await User.findOne({ username: req.user }).populate("books");
+
+            if (!user) return res.status(200).json({ success: true, status_message: "No User." });
+
+            const books = user.books;
+
+            const book = books.filter((book) => book.id === req.params.bookId)[0];
+
+            if (!book)
+                return res.status(200).json({
+                    success: false,
+                    status_message: "The resource you requested could not be found.",
+                });
+
+            if (book.status === "Stopped")
+                return res.status(200).json({
+                    success: false,
+                    status_message: "The resource you requested has already been stopped.",
+                });
+
+            if (book.status === "Completed")
+                return res.status(200).json({
+                    success: false,
+                    status_message: "The resource you requested has already been read.",
+                });
+
+            const stopBook = await Book.findOneAndUpdate({ id: req.params.bookId }, { status: "Stopped" });
+
+            return res.status(200).json({
+                success: true,
+                status_message: "The resource was updated.",
+                book: stopBook,
+            });
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
+    },
 };
 
 module.exports = bookController;
