@@ -128,8 +128,6 @@ const authController = {
 
     logoutUser: async (req, res, next) => {
         try {
-            logEvents("User Logout", "appLog.log");
-
             const cookies = req.cookies;
             if (!cookies?.jwt)
                 return res.status(204).json({
