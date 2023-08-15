@@ -20,6 +20,16 @@ const bookController = {
         }
     },
 
+    getBookDetails: async (req, res, next) => {
+        try {
+            const response = await axios.get(`/books/v1/volumes/${req.params.bookId}`);
+
+            return res.status(200).json(response.data);
+        } catch (error) {
+            next(error);
+        }
+    },
+
     addMovie: async (req, res, next) => {
         try {
             const { bookId } = req.body;
@@ -88,6 +98,8 @@ const bookController = {
 
             const book = books.filter((book) => book.id === req.params.bookId)[0];
 
+            if (!book) return res.status(200).json({});
+
             return res.status(200).json(book);
         } catch (error) {
             console.log(error);
@@ -125,6 +137,37 @@ const bookController = {
             });
         } catch (error) {
             console.log(error);
+            next(error);
+        }
+    },
+
+    updateCurrentPage: async (req, res, next) => {
+        try {
+            const { currentPage } = req.body;
+
+            const user = await User.findOne({ username: req.user }).populate("books");
+
+            if (!user) return res.status(200).json({ success: true, status_message: "No User." });
+
+            const books = user.books;
+
+            const book = books.filter((book) => book.id === req.params.bookId)[0];
+
+            if (!book)
+                return res.status(200).json({
+                    success: false,
+                    status_message: "The resource you requested could not be found.",
+                });
+
+            console.log(req.params.bookId);
+
+            await Book.findOneAndUpdate({ id: req.params.bookId }, { $set: { currentPage } });
+
+            return res.status(200).json({
+                success: true,
+                status_message: "The resource was updated.",
+            });
+        } catch (error) {
             next(error);
         }
     },
