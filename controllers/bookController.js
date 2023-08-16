@@ -61,6 +61,7 @@ const bookController = {
                 pageCount,
                 categories,
                 language,
+                status: "TBR",
             });
 
             user.books.push(book._id);
@@ -127,7 +128,7 @@ const bookController = {
 
             const startBook = await Book.findOneAndUpdate(
                 { id: req.params.bookId },
-                { startDate, currentPage: 0, status: "Started Reading" }
+                { startDate, currentPage: 0, status: "Reading" }
             );
 
             return res.status(200).json({
