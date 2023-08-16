@@ -17,7 +17,7 @@ const userRoutes = require("./routers/userRoutes");
 const statsRoutes = require("./routers/statRoutes");
 
 const verifyJWT = require("./middleware/verifyJWT");
-const errorHandler = require("./middlewares/errorHandler");
+const errorHandler = require("./middleware/errorHandler");
 
 console.log("Environment:", process.env.NODE_ENV);
 
