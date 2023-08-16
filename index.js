@@ -13,6 +13,7 @@ const corsOptions = require("./configs/corsOption");
 const connectDB = require("./configs/db");
 const bookRoutes = require("./routers/bookRoutes");
 const authRoutes = require("./routers/authRoutes");
+const userRoutes = require("./routers/userRoutes");
 
 const verifyJWT = require("./middleware/verifyJWT");
 
@@ -26,6 +27,7 @@ app.use(cors(corsOptions));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/books", verifyJWT, bookRoutes);
+app.use("/api/users", verifyJWT, userRoutes);
 
 const PORT = process.env.PORT || 5001;
 mongoose.connection.once("open", () => {
