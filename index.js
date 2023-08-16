@@ -17,6 +17,7 @@ const userRoutes = require("./routers/userRoutes");
 const statsRoutes = require("./routers/statRoutes");
 
 const verifyJWT = require("./middleware/verifyJWT");
+const errorHandler = require("./middlewares/errorHandler");
 
 console.log("Environment:", process.env.NODE_ENV);
 
@@ -30,6 +31,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/books", verifyJWT, bookRoutes);
 app.use("/api/users", verifyJWT, userRoutes);
 app.use("/api/stats", verifyJWT, statsRoutes);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5001;
 mongoose.connection.once("open", () => {
