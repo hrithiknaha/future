@@ -258,6 +258,36 @@ const bookController = {
             next(error);
         }
     },
+
+    restartReading: async (req, res, next) => {
+        try {
+            const user = await User.findOne({ username: req.user }).populate("books");
+
+            if (!user) return res.status(200).json({ success: true, status_message: "No User." });
+
+            const books = user.books;
+
+            const book = books.filter((book) => book.id === req.params.bookId)[0];
+
+            if (!book)
+                return res.status(200).json({
+                    success: false,
+                    status_message: "The resource you requested could not be found.",
+                });
+
+            const restartBook = await Book.findOneAndUpdate({ id: req.params.bookId }, { status: "Reading" });
+
+            return res.status(200).json({
+                success: true,
+                status_message: "The resource was updated.",
+                book: restartBook,
+            });
+
+            res.json(book);
+        } catch (error) {
+            next(error);
+        }
+    },
 };
 
 module.exports = bookController;

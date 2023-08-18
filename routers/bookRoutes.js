@@ -11,5 +11,6 @@ router.post("/:bookId/page", bookController.updateCurrentPage);
 router.post("/:bookId/start", bookController.startReading);
 router.post("/:bookId/end", bookController.endReading);
 router.get("/:bookId/stop", bookController.stopReading);
+router.get("/:bookId/restart", bookController.restartReading);
 
 module.exports = router;
